@@ -18,33 +18,158 @@ $filterEstado = isset($_GET['filterEstado']) ? $_GET['filterEstado'] : '';
 
 $tareas = null;
 
+$estadosLegibles = [
+    'pendiente' => 'Pendiente',
+    'en_progreso' => 'En Progreso',
+    'completada' => 'Completada',
+];
+
+$prioridadesLegible = [
+    1 => 'Alta',
+    2 => 'Media Alta',
+    3 => 'Media',
+    4 => 'Media Baja',
+    5 => 'Baja',
+
+];
+
 // Procesar la acción
 switch ($action) {
     case 'add':
-        // Los estudiantes deben implementar esta lógica
+        // Verificar que se reciban los parámetros necesarios
+        if (isset($_GET['titulo'], $_GET['descripcion'], $_GET['prioridad'], $_GET['tipo'])) {
+            // Crear una nueva tarea
+            $nuevaTarea = new Tarea([
+                'titulo' => $_GET['titulo'],
+                'descripcion' => $_GET['descripcion'],
+                'prioridad' => $_GET['prioridad'],
+                'tipo' => $_GET['tipo']
+            ]);
+
+            // Asignar campos específicos según el tipo de tarea
+            switch ($nuevaTarea->tipo) {
+                case 'desarrollo':
+                    if (isset($_GET['lenguajeProgramacion'])) {
+                        $nuevaTarea->$lenguajeProgramacion = $_GET['lenguajeProgramacion'];
+                    } else {
+                        $mensaje = "Falta el lenguaje de programación.";
+                    }
+                    break;
+                case 'diseno':
+                    if (isset($_GET['herramientaDiseno'])) {
+                        $nuevaTarea->$herramientaDiseno = $_GET['herramientaDiseno'];
+                    } else {
+                        $mensaje = "Falta la herramienta de diseño.";
+                    }
+                    break;
+                case 'testing':
+                    if (isset($_GET['tipoTest'])) {
+                        $nuevaTarea->$tipoTest = $_GET['tipoTest'];
+                    } else {
+                        $mensaje = "Falta el tipo de test.";
+                    }
+                    break;
+                default:
+                    $mensaje = "Tipo de tarea inválido.";
+                    break;
+            }
+
+            // Agregar la tarea si no hubo errores
+            if (empty($mensaje)) {
+                $gestorTareas->agregarTareas($nuevaTarea);
+                $mensaje = "Tarea agregada exitosamente.";
+            }
+        } else {
+            $mensaje = "Faltan parámetros requeridos.";
+        }
         break;
 
     case 'edit':
-        // Los estudiantes deben implementar esta lógica
+        // Verificar que se reciban los parámetros necesarios
+        if (isset($_GET['id'], $_GET['titulo'], $_GET['descripcion'], $_GET['prioridad'], $_GET['tipo'])) {
+            // Crear la tarea a editar
+            $tareaEditada = new Tarea([
+                'id' => $_GET['id'],
+                'titulo' => $_GET['titulo'],
+                'descripcion' => $_GET['descripcion'],
+                'prioridad' => $_GET['prioridad'],
+                'tipo' => $_GET['tipo']
+            ]);
+
+            // Asignar campos específicos según el tipo de tarea
+            switch ($tareaEditada->tipo) {
+                case 'desarrollo':
+                    if (isset($_GET['lenguajeProgramacion'])) {
+                        $tareaEditada->$lenguajeProgramacion = $_GET['lenguajeProgramacion'];
+                    } else {
+                        $mensaje = "Falta el lenguaje de programación.";
+                    }
+                    break;
+                case 'diseno':
+                    if (isset($_GET['herramientaDiseno'])) {
+                        $tareaEditada->$herramientaDiseno = $_GET['herramientaDiseno'];
+                    } else {
+                        $mensaje = "Falta la herramienta de diseño.";
+                    }
+                    break;
+                case 'testing':
+                    if (isset($_GET['tipoTest'])) {
+                        $tareaEditada->$tipoTest = $_GET['tipoTest'];
+                    } else {
+                        $mensaje = "Falta el tipo de test.";
+                    }
+                    break;
+                default:
+                    $mensaje = "Tipo de tarea inválido.";
+                    break;
+            }
+
+            // Actualizar la tarea si no hubo errores
+            if (empty($mensaje)) {
+                $gestorTareas->actualizarTareas($tareaEditada);
+                $mensaje = "Tarea actualizada exitosamente.";
+            }
+        } else {
+            $mensaje = "Faltan parámetros requeridos.";
+        }
         break;
 
     case 'delete':
-        // Los estudiantes deben implementar esta lógica
+        // Verificar que se reciba el ID de la tarea
+        if (isset($_GET['id'])) {
+            $gestorTareas->eliminarTareas($_GET['id']);
+            $mensaje = "Tarea eliminada exitosamente.";
+        } else {
+            $mensaje = "Falta el ID de la tarea.";
+        }
         break;
 
     case 'status':
-        // Los estudiantes deben implementar esta lógica
+        // Verificar que se reciban los parámetros necesarios
+        if (isset($_GET['id'], $_GET['estado'])) {
+            $gestorTareas->actualizarEstadoTarea($_GET['id'], $_GET['estado']);
+            $mensaje = "Estado de la tarea actualizado.";
+        } else {
+            $mensaje = "Faltan parámetros requeridos.";
+        }
         break;
 
     case 'filter':
-        // Los estudiantes deben implementar esta lógica
+        // Verificar que se reciba el estado a filtrar
+        if (isset($_GET['filterEstado'])) {
+            $tareas = $gestorTareas->buscarTareasPorEstado($_GET['filterEstado']);
+        } else {
+            $mensaje = "Falta el estado para filtrar.";
+        }
         break;
 
     case 'list':
     default:
-        // Por ahora, simplemente cargamos todas las tareas
+        // Listar tareas sin filtro
+        $tareas = $gestorTareas->listarTareas();
         break;
 }
+
 
 // Cargar las tareas si aún no se han cargado
 if ($tareas === null) {
@@ -159,10 +284,13 @@ if ($tareas === null) {
                         <td><?php echo $tarea->id; ?></td>
                         <td><?php echo $tarea->titulo; ?></td>
                         <td><?php echo $tarea->descripcion; ?></td>
-                        <td><?php echo $tarea->estado; ?></td>
-                        <td><?php echo $tarea->prioridad; ?></td>
+                        <td><?php echo $estadosLegibles[$tarea->estado]; ?></td>
+                        <td><?php echo $prioridadesLegible[$tarea->prioridad]; ?></td>
                         <td><?php echo $tarea->tipo; ?></td>
                         <td><?php echo $tarea->fechaCreacion; ?></td>
+                        <td><?php echo $tarea->obtenerDetallesEspecificos() ?></td>
+
+                        
                         <td>
                             <a href='index.php?action=edit&id=<?php echo $tarea->id; ?>' class='btn btn-sm btn-warning'><i class='fas fa-edit'></i></a>
                             <a href='index.php?action=delete&id=<?php echo $tarea->id; ?>' class='btn btn-sm btn-danger' onclick="return confirm('¿Está seguro de que desea eliminar esta tarea?');"><i class='fas fa-trash'></i></a>
@@ -171,9 +299,9 @@ if ($tareas === null) {
                                     Estado
                                 </button>
                                 <ul class='dropdown-menu'>
-                                    <li><a class='dropdown-item' href='index.php?action=status&id=<?php echo $tarea->id; ?>&estado=pendiente'>Pendiente</a></li>
-                                    <li><a class='dropdown-item' href='index.php?action=status&id=<?php echo $tarea->id; ?>&estado=en_progreso'>En Progreso</a></li>
-                                    <li><a class='dropdown-item' href='index.php?action=status&id=<?php echo $tarea->id; ?>&estado=completada'>Completada</a></li>
+                                    <?php foreach ($estadosLegibles as $valor => $texto): ?>
+                                        <li><a class='dropdown-item' href='index.php?action=status&id=<?php echo $tarea->id; ?>&estado=<?php echo $valor; ?>'><?php echo $texto; ?></a></li>
+                                    <?php endforeach; ?>
                                 </ul>
                             </div>
                         </td>
