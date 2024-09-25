@@ -42,7 +42,7 @@ switch ($action) {
 
     case 'filter':
         // Los estudiantes deben implementar esta lógica
-        $gestorTareas->buscarTareasPorEstado($estado);
+        $gestorTareas->buscarTareasPorEstado('');
         break;
 
     case 'list':
