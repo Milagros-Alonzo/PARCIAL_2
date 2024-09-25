@@ -17,32 +17,38 @@ $sortDirection = isset($_GET['direction']) ? $_GET['direction'] : 'ASC';
 $filterEstado = isset($_GET['filterEstado']) ? $_GET['filterEstado'] : '';
 
 $tareas = null;
-
+$gestorTareas = new GestorTareas();
 // Procesar la acción
 switch ($action) {
     case 'add':
         // Los estudiantes deben implementar esta lógica
+        $gestorTareas->agregarTarea('');
         break;
 
     case 'edit':
         // Los estudiantes deben implementar esta lógica
+        $gestorTareas->actualizarTarea('');
         break;
 
     case 'delete':
         // Los estudiantes deben implementar esta lógica
+        $gestorTareas->eliminarTarea($id);
         break;
 
     case 'status':
         // Los estudiantes deben implementar esta lógica
+        $gestorTareas->actualizarEstadoTarea($id, $nuevoEstado);
         break;
 
     case 'filter':
         // Los estudiantes deben implementar esta lógica
+        $gestorTareas->buscarTareasPorEstado($estado);
         break;
 
     case 'list':
     default:
         // Por ahora, simplemente cargamos todas las tareas
+        $gestorTareas->listarTareas($filtroEstado = '');
         break;
 }
 
@@ -55,6 +61,7 @@ if ($tareas === null) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,10 +69,11 @@ if ($tareas === null) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Gestor de Tareas</h1>
-        
+
         <?php if (isset($mensaje)): ?>
             <div class="alert alert-success" role="alert">
                 <?php echo $mensaje; ?>
@@ -78,14 +86,14 @@ if ($tareas === null) {
             <?php if ($tareaEnEdicion): ?>
                 <input type="hidden" name="id" value="<?php echo $tareaEnEdicion->id; ?>">
             <?php endif; ?>
-            
+
             <div class="col">
                 <input type="text" class="form-control" name="titulo" placeholder="Título" required
-                       value="<?php echo $tareaEnEdicion ? $tareaEnEdicion->titulo : ''; ?>">
+                    value="<?php echo $tareaEnEdicion ? $tareaEnEdicion->titulo : ''; ?>">
             </div>
             <div class="col">
                 <input type="text" class="form-control" name="descripcion" placeholder="Descripción" required
-                       value="<?php echo $tareaEnEdicion ? $tareaEnEdicion->descripcion : ''; ?>">
+                    value="<?php echo $tareaEnEdicion ? $tareaEnEdicion->descripcion : ''; ?>">
             </div>
             <div class="col">
                 <select class="form-select" name="prioridad" required>
@@ -185,32 +193,33 @@ if ($tareas === null) {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-    document.getElementById('tipoTarea').addEventListener('change', function() {
-        const campoEspecifico = document.getElementById('campoEspecifico');
-        const campoDesarrollo = document.getElementById('campoDesarrollo');
-        const campoDiseno = document.getElementById('campoDiseno');
-        const campoTesting = document.getElementById('campoTesting');
-        
-        campoEspecifico.style.display = 'none';
-        campoDesarrollo.style.display = 'none';
-        campoDiseno.style.display = 'none';
-        campoTesting.style.display = 'none';
-        
-        switch(this.value) {
-            case 'desarrollo':
-                campoEspecifico.style.display = 'block';
-                campoDesarrollo.style.display = 'block';
-                break;
-            case 'diseno':
-                campoEspecifico.style.display = 'block';
-                campoDiseno.style.display = 'block';
-                break;
-            case 'testing':
-                campoEspecifico.style.display = 'block';
-                campoTesting.style.display = 'block';
-                break;
-        }
-    });
+        document.getElementById('tipoTarea').addEventListener('change', function() {
+            const campoEspecifico = document.getElementById('campoEspecifico');
+            const campoDesarrollo = document.getElementById('campoDesarrollo');
+            const campoDiseno = document.getElementById('campoDiseno');
+            const campoTesting = document.getElementById('campoTesting');
+
+            campoEspecifico.style.display = 'none';
+            campoDesarrollo.style.display = 'none';
+            campoDiseno.style.display = 'none';
+            campoTesting.style.display = 'none';
+
+            switch (this.value) {
+                case 'desarrollo':
+                    campoEspecifico.style.display = 'block';
+                    campoDesarrollo.style.display = 'block';
+                    break;
+                case 'diseno':
+                    campoEspecifico.style.display = 'block';
+                    campoDiseno.style.display = 'block';
+                    break;
+                case 'testing':
+                    campoEspecifico.style.display = 'block';
+                    campoTesting.style.display = 'block';
+                    break;
+            }
+        });
     </script>
 </body>
+
 </html>

@@ -1,7 +1,8 @@
 <?php
 // Archivo: clases.php
 
-class Tarea {
+class Tarea
+{
     public $id;
     public $titulo;
     public $descripcion;
@@ -10,29 +11,56 @@ class Tarea {
     public $fechaCreacion;
     public $tipo;
 
-    public function __construct($datos) {
+    public function __construct($datos)
+    {
         foreach ($datos as $key => $value) {
             $this->$key = $value;
         }
     }
 
     // Implementar estos getters
-    // public function getEstado() { }
-    // public function getPrioridad() { }
+    public function getEstado()
+    {
+        return  $this->estado;
+    }
+    public function getPrioridad()
+    {
+        return $this->prioridad;
+    }
 }
 
-class GestorTareas {
+class GestorTareas
+{
     private $tareas = [];
 
-    public function cargarTareas() {
+    public function cargarTareas()
+    {
         $json = file_get_contents('tareas.php');
         $data = json_decode($json, true);
         foreach ($data as $tareaData) {
             $tarea = new Tarea($tareaData);
             $this->tareas[] = $tarea;
         }
-        
+
         return $this->tareas;
+    }
+    public function agregarTarea($tarea)
+    {
+        array_push($this->tareas, $tarea);
+    }
+    public function  eliminarTarea($id) {}
+    public function actualizarTarea($tarea) {}
+    public function actualizarEstadoTarea($id, $nuevoEstado) {}
+    public function buscarTareasPorEstado($estado) {}
+    public function listarTareas($filtroEstado = '')
+    {
+        $array_return = array();
+        foreach ($this->tareas as $tarea) {
+            if ($filtroEstado === $tarea['estado']) {
+                array_push($array_return, $tarea);
+            }
+        }
+        return $array_return;
     }
 }
 
