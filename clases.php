@@ -25,7 +25,7 @@ class GestorTareas {
     private $tareas = [];
 
     public function cargarTareas() {
-        $json = file_get_contents('tareas.json');
+        $json = file_get_contents('tareas.php');
         $data = json_decode($json, true);
         foreach ($data as $tareaData) {
             $tarea = new Tarea($tareaData);
