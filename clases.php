@@ -19,6 +19,33 @@ class Tarea {
     // Implementar estos getters
     // public function getEstado() { }
     // public function getPrioridad() { }
+    public function getID_tarea($id){
+        return $this-> $id;
+    }
+ 
+    public function getTitulo_tarea($titulo){
+        return $this ->$titulo;
+    }
+ 
+    public function getDescrip_tarea($descripcion){
+        return $this-> $descripcion;
+    }
+ 
+    public function getEstado_tarea($estado){
+        return $this->$estado;
+    }
+ 
+    public function getPrioridad_tarea($prioridad){
+        return $this-> $prioridad;
+    }
+ 
+    public function getFechaCreacion_tarea($fechaCreacion){
+        return $this-> $fechaCreacion;
+    }
+ 
+    public function getTipo_tarea($tipo){
+        return $this-> $tipo;
+    }
 }
 
 class GestorTareas {
@@ -38,5 +65,58 @@ class GestorTareas {
 
 // Implementar:
 // 1. La interfaz Detalle
+
+interface Detalle {
+    public function obtenerDetallesEspecificos(): string;
+}
+
 // 2. Modificar la clase Tarea para implementar la interfaz Detalle
+
 // 3. Las clases TareaDesarrollo, TareaDiseno y TareaTesting que hereden de Tarea
+
+class TareaDesarrollos extends Tarea implements Detalle {
+    private $lenguajeProgramacion;
+
+    public function __construct($lenguajeProgramacion) {
+        $this->lenguajeProgramacion = $lenguajeProgramacion;
+    }
+
+    public function obtenerDetallesEspecificos(): string {
+        return "leguaje de programacion es: $this->lenguajeProgramacion";
+    }
+}
+
+class TareaDiseno extends Tarea implements Detalle {
+    private $herramientaDiseno;
+
+    public function __construct($herramientaDiseno) {
+        $this->herramientaDiseno = $herramientaDiseno;
+    }
+
+
+    public function obtenerDetallesEspecificos(): string {
+        return "herramienta de diseno es: $this->herramientaDiseno";
+    }
+}
+
+class TareaTesting extends Tarea implements Detalle {
+    private $tipoTest;
+
+    public function __construct($tipoTest) {
+        if (in_array($tipoTest, ['unitario', 'integracion', 'e2e'])) {
+            $this->tipoTest = $tipoTest;
+        } else {
+            throw new InvalidArgumentException("no es valido el tipo de test");
+        }
+    }
+
+    public function obtenerDetallesEspecificos(): string {
+        return "tipo de test: $this->tipoTest";
+    }
+
+}
+
+?>
+            
+            
+            
