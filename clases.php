@@ -48,9 +48,20 @@ class GestorTareas
     {
         array_push($this->tareas, $tarea);
     }
-    public function  eliminarTarea($id) {}
+    public function  eliminarTarea($id)
+    {
+        unset($this->tareas[$id - 1]);
+    }
     public function actualizarTarea($tarea) {}
-    public function actualizarEstadoTarea($id, $nuevoEstado) {}
+    public function actualizarEstadoTarea($id, $nuevoEstado)
+    {
+        foreach ($this->tareas as $key => $tarea) {
+            if ($nuevoEstado === $tarea['estado']) {
+                $this->tareas[$key] = $nuevoEstado;
+            }
+        }
+        return $this->tareas;
+    }
     public function buscarTareasPorEstado($estado) {}
     public function listarTareas($filtroEstado = '')
     {
