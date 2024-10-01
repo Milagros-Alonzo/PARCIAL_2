@@ -2,138 +2,32 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
+ 
 require_once 'clases.php';
-
+ 
 // Obtener la acción del query string, 'list' por defecto
 $action = isset($_GET['action']) ? $_GET['action'] : 'list';
-
+ 
 // Variable para almacenar la tarea en edición
 $tareaEnEdicion = null;
-
+ 
 // Variables para ordenamiento y filtrado
 $sortField = isset($_GET['field']) ? $_GET['field'] : 'id';
 $sortDirection = isset($_GET['direction']) ? $_GET['direction'] : 'ASC';
 $filterEstado = isset($_GET['filterEstado']) ? $_GET['filterEstado'] : '';
-
+ 
 $tareas = null;
-
-$estadosLegibles = [
-    'pendiente' => 'Pendiente',
-    'en_progreso' => 'En Progreso',
-    'completada' => 'Completada',
-];
-
-$prioridadesLegible = [
-    1 => 'Alta',
-    2 => 'Media Alta',
-    3 => 'Media',
-    4 => 'Media Baja',
-    5 => 'Baja',
-
-];
 
 // Procesar la acción
 switch ($action) {
     case 'add':
-        // Verificar que se reciban los parámetros necesarios
-        if (isset($_GET['titulo'], $_GET['descripcion'], $_GET['prioridad'], $_GET['tipo'])) {
-            // Crear una nueva tarea
-            $nuevaTarea = new Tarea([
-                'titulo' => $_GET['titulo'],
-                'descripcion' => $_GET['descripcion'],
-                'prioridad' => $_GET['prioridad'],
-                'tipo' => $_GET['tipo']
-            ]);
-
-            // Asignar campos específicos según el tipo de tarea
-            switch ($nuevaTarea->tipo) {
-                case 'desarrollo':
-                    if (isset($_GET['lenguajeProgramacion'])) {
-                        $nuevaTarea->$lenguajeProgramacion = $_GET['lenguajeProgramacion'];
-                    } else {
-                        $mensaje = "Falta el lenguaje de programación.";
-                    }
-                    break;
-                case 'diseno':
-                    if (isset($_GET['herramientaDiseno'])) {
-                        $nuevaTarea->$herramientaDiseno = $_GET['herramientaDiseno'];
-                    } else {
-                        $mensaje = "Falta la herramienta de diseño.";
-                    }
-                    break;
-                case 'testing':
-                    if (isset($_GET['tipoTest'])) {
-                        $nuevaTarea->$tipoTest = $_GET['tipoTest'];
-                    } else {
-                        $mensaje = "Falta el tipo de test.";
-                    }
-                    break;
-                default:
-                    $mensaje = "Tipo de tarea inválido.";
-                    break;
-            }
-
-            // Agregar la tarea si no hubo errores
-            if (empty($mensaje)) {
-                $gestorTareas->agregarTareas($nuevaTarea);
-                $mensaje = "Tarea agregada exitosamente.";
-            }
-        } else {
-            $mensaje = "Faltan parámetros requeridos.";
-        }
+        // Los estudiantes deben implementar esta lógica
         break;
-
+ 
     case 'edit':
-        // Verificar que se reciban los parámetros necesarios
-        if (isset($_GET['id'], $_GET['titulo'], $_GET['descripcion'], $_GET['prioridad'], $_GET['tipo'])) {
-            // Crear la tarea a editar
-            $tareaEditada = new Tarea([
-                'id' => $_GET['id'],
-                'titulo' => $_GET['titulo'],
-                'descripcion' => $_GET['descripcion'],
-                'prioridad' => $_GET['prioridad'],
-                'tipo' => $_GET['tipo']
-            ]);
-
-            // Asignar campos específicos según el tipo de tarea
-            switch ($tareaEditada->tipo) {
-                case 'desarrollo':
-                    if (isset($_GET['lenguajeProgramacion'])) {
-                        $tareaEditada->$lenguajeProgramacion = $_GET['lenguajeProgramacion'];
-                    } else {
-                        $mensaje = "Falta el lenguaje de programación.";
-                    }
-                    break;
-                case 'diseno':
-                    if (isset($_GET['herramientaDiseno'])) {
-                        $tareaEditada->$herramientaDiseno = $_GET['herramientaDiseno'];
-                    } else {
-                        $mensaje = "Falta la herramienta de diseño.";
-                    }
-                    break;
-                case 'testing':
-                    if (isset($_GET['tipoTest'])) {
-                        $tareaEditada->$tipoTest = $_GET['tipoTest'];
-                    } else {
-                        $mensaje = "Falta el tipo de test.";
-                    }
-                    break;
-                default:
-                    $mensaje = "Tipo de tarea inválido.";
-                    break;
-            }
-
-            // Actualizar la tarea si no hubo errores
-            if (empty($mensaje)) {
-                $gestorTareas->actualizarTareas($tareaEditada);
-                $mensaje = "Tarea actualizada exitosamente.";
-            }
-        } else {
-            $mensaje = "Faltan parámetros requeridos.";
-        }
+        // Los estudiantes deben implementar esta lógica
         break;
-
+ 
     case 'delete':
         // Verificar que se reciba el ID de la tarea
         if (isset($_GET['id'])) {
@@ -143,7 +37,7 @@ switch ($action) {
             $mensaje = "Falta el ID de la tarea.";
         }
         break;
-
+ 
     case 'status':
         // Verificar que se reciban los parámetros necesarios
         if (isset($_GET['id'], $_GET['estado'])) {
@@ -153,7 +47,7 @@ switch ($action) {
             $mensaje = "Faltan parámetros requeridos.";
         }
         break;
-
+ 
     case 'filter':
         // Verificar que se reciba el estado a filtrar
         if (isset($_GET['filterEstado'])) {
@@ -162,7 +56,7 @@ switch ($action) {
             $mensaje = "Falta el estado para filtrar.";
         }
         break;
-
+ 
     case 'list':
     default:
         // Listar tareas sin filtro
@@ -170,13 +64,12 @@ switch ($action) {
         break;
 }
 
-
 // Cargar las tareas si aún no se han cargado
 if ($tareas === null) {
     $gestorTareas = new GestorTareas();
     $tareas = $gestorTareas->cargarTareas();
 }
-
+ 
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -190,20 +83,20 @@ if ($tareas === null) {
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Gestor de Tareas</h1>
-        
+       
         <?php if (isset($mensaje)): ?>
             <div class="alert alert-success" role="alert">
                 <?php echo $mensaje; ?>
             </div>
         <?php endif; ?>
-
+ 
         <!-- Formulario para agregar/editar tarea -->
         <form action="index.php" method="GET" class="row g-3 mb-4 align-items-end">
             <input type="hidden" name="action" value="<?php echo $tareaEnEdicion ? 'edit' : 'add'; ?>">
             <?php if ($tareaEnEdicion): ?>
                 <input type="hidden" name="id" value="<?php echo $tareaEnEdicion->id; ?>">
             <?php endif; ?>
-            
+           
             <div class="col">
                 <input type="text" class="form-control" name="titulo" placeholder="Título" required
                        value="<?php echo $tareaEnEdicion ? $tareaEnEdicion->titulo : ''; ?>">
@@ -247,7 +140,7 @@ if ($tareas === null) {
                 </button>
             </div>
         </form>
-
+ 
         <!-- Filtro por estado -->
         <form action="index.php" method="GET" class="row g-3 mb-4 align-items-end">
             <input type="hidden" name="action" value="filter">
@@ -263,7 +156,7 @@ if ($tareas === null) {
                 <button type="submit" class="btn btn-primary">Filtrar</button>
             </div>
         </form>
-
+ 
         <!-- Tabla de tareas -->
         <table class="table table-striped table-hover">
             <thead>
@@ -288,9 +181,6 @@ if ($tareas === null) {
                         <td><?php echo $prioridadesLegible[$tarea->prioridad]; ?></td>
                         <td><?php echo $tarea->tipo; ?></td>
                         <td><?php echo $tarea->fechaCreacion; ?></td>
-                        <td><?php echo $tarea->obtenerDetallesEspecificos() ?></td>
-
-                        
                         <td>
                             <a href='index.php?action=edit&id=<?php echo $tarea->id; ?>' class='btn btn-sm btn-warning'><i class='fas fa-edit'></i></a>
                             <a href='index.php?action=delete&id=<?php echo $tarea->id; ?>' class='btn btn-sm btn-danger' onclick="return confirm('¿Está seguro de que desea eliminar esta tarea?');"><i class='fas fa-trash'></i></a>
@@ -310,7 +200,7 @@ if ($tareas === null) {
             </tbody>
         </table>
     </div>
-
+ 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     document.getElementById('tipoTarea').addEventListener('change', function() {
@@ -318,12 +208,12 @@ if ($tareas === null) {
         const campoDesarrollo = document.getElementById('campoDesarrollo');
         const campoDiseno = document.getElementById('campoDiseno');
         const campoTesting = document.getElementById('campoTesting');
-        
+       
         campoEspecifico.style.display = 'none';
         campoDesarrollo.style.display = 'none';
         campoDiseno.style.display = 'none';
         campoTesting.style.display = 'none';
-        
+       
         switch(this.value) {
             case 'desarrollo':
                 campoEspecifico.style.display = 'block';
