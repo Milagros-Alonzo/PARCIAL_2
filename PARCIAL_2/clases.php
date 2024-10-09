@@ -28,7 +28,7 @@ class EntradaUnaColumna extends Entrada{
     public $descripcion;
  
     public function obtenerDetallesEspecificos(): string{
-        return "";
+       return $this->titulo;
     }
  
 }
@@ -40,7 +40,7 @@ class EntradaDosColumna extends Entrada{
     public $descripcion2;
  
     public function obtenerDetallesEspecificos(): string{
-        return "";
+        return [];
     }
  
 }
@@ -53,6 +53,9 @@ class EntradaTresColumna extends Entrada{
     public $descripcion3;
  
     public function obtenerDetallesEspecificos(): string{
+        $this->titulo1;
+        $this->titulo2;
+        $this->titulo3;
         return "";
     }
  
@@ -82,6 +85,39 @@ class GestorBlog {
     public function obtenerEntradas() {
         return $this->entradas;
     }
+
+    public function agregarEntrada(Entrada $entrada) {
+        $this->entradas[] = $entrada;
+    }
+
+    public function editarEntrada(Entrada $entrada) {
+        foreach ($this->entradas as $index => $e) {
+            if ($e->id === $entrada->id) {
+                $this->entradas[$index] = $entrada;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function eliminarEntrada($id) {
+        foreach ($this->entradas as $index => $entrada) {
+            if ($entrada->id == $id) {
+                unset($this->entradas[$index]);
+                $this->entradas = array_values($this->entradas); 
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function obtenerEntrada($id) {
+        foreach ($this->entradas as $entrada) {
+            if ($entrada->id == $id) {
+                return $entrada;
+            }
+        }
+        return null;
+    }
 }       
-            
             
