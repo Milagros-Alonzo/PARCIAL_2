@@ -40,7 +40,7 @@ class EntradaDosColumna extends Entrada{
     public $descripcion2;
  
     public function obtenerDetallesEspecificos(): string{
-        return [];
+        return $titulo1 , $titulo2 ;
     }
  
 }
@@ -111,13 +111,5 @@ class GestorBlog {
         return false;
     }
 
-    public function obtenerEntrada($id) {
-        foreach ($this->entradas as $entrada) {
-            if ($entrada->id == $id) {
-                return $entrada;
-            }
-        }
-        return null;
-    }
 }       
             
