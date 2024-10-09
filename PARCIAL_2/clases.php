@@ -1,11 +1,20 @@
 <?php
-class Entrada {
+
+interface Detalles {
+  public function  obtenerDetallesEspecificos():string;
+}
+
+//   public function obtenerEntradas() {
+   // return $this->entradas;
+
+
+   abstract class Entrada implements Detalles{
     public $id;
     public $fecha_creacion;
     public $tipo;
     public $titulo;
     public $descripcion;
-
+ 
     public function __construct($datos = []) {
         foreach ($datos as $key => $value) {
             if (property_exists($this, $key)) {
@@ -14,6 +23,41 @@ class Entrada {
         }
     }
 }
+class EntradaUnaColumna extends Entrada{
+    public $titulo;
+    public $descripcion;
+ 
+    public function obtenerDetallesEspecificos(): string{
+        return "";
+    }
+ 
+}
+ 
+class EntradaDosColumna extends Entrada{
+    public $titulo1;
+    public $descripcion1;
+    public $titulo2;
+    public $descripcion2;
+ 
+    public function obtenerDetallesEspecificos(): string{
+        return "";
+    }
+ 
+}
+ 
+class EntradaTresColumna extends Entrada{
+    public $titulo1;
+    public $descripcion1;
+    public $titulo2;
+    public $titulo3;
+    public $descripcion3;
+ 
+    public function obtenerDetallesEspecificos(): string{
+        return "";
+    }
+ 
+}
+
 
 class GestorBlog {
     private $entradas = [];
